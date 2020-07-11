@@ -68,3 +68,23 @@ function! lookml#NextSection(type, backwards, visual)
 
     execute 'silent normal! ' . dir . pattern . dir . flags . "\r"
 endfunction
+
+function! lookml#NextNonBlankLine(lnum)
+  " could be simplified with builtin nextnonblank
+  let l:numlines = line('$')
+  let l:current = a:lnum + 1
+
+  while current <= numlines
+      if getline(current) =~? '\v\S'
+          return current
+      endif
+
+      let l:current += 1
+  endwhile
+
+  return -2
+endfunction
+
+function! lookml#IndentLevel(lnum)
+    return indent(a:lnum) / &shiftwidth
+endfunction
