@@ -53,7 +53,7 @@ function! lookml#NextSection(type, backwards, visual)
     endif
 
     if a:type == 1
-        let pattern = '\v\n\n^\s*(dimension\s*|fields|measure|set|join):'
+        let pattern = '\v\n^(#|\s)*(dimension(|_group)|fields|measure|set|join):'
         let flags = 'e'
     elseif a:type == 2
         let pattern = '\v\n\n^(datagroup|explore|view|%^):'
