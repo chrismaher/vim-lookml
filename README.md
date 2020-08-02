@@ -2,7 +2,7 @@
 
 This plugin offers simple improvements for editing [LookML](https://docs.looker.com/reference) files via the following functionality:
 * Syntax highlighting
-* Tag navigation
+* Code folding
 * Section navigation
 * Smarter indentation
 
@@ -36,16 +36,3 @@ By default, vim-lookml uses `setlocal foldlevel=1` so that the topmost foldlevel
 `[[` and `]]` are mapped to jump between field definitions in view files, and `join` definitions in model files.
 
 `[]` and `][` are mapped to jump between `explore` and `view` definitions.
-
-### Tags
-In order to use the plugin's tag functionality, you must have ctags installed. If you're using macOS, you can use brew:
-
-    brew install ctags
-
-You'll also need to add LookML rules to your `~/.ctags` file:
-
-    --langdef=lookml
-    --langmap=lookml:.lkml
-    --regex-lookml=/(dimension|measure): ([a-z0-9_]+) {/\2/
-
-To generate a tags file, use the command `:LookMLTag`. The tag file will be placed at the base of your Looker project, as determined by the location of the .git directory.
