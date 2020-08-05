@@ -1,23 +1,22 @@
-noremap <script> <buffer> <silent> ]]
-        \ :call lookml#NextSection(1, 0, 0)<cr>
+function! Next(forward)
+    let l:flags = 'W'
+    if ! a:forward
+        let l:flags = l:flags . 'b'
+    endif
 
-noremap <script> <buffer> <silent> [[
-        \ :call lookml#NextSection(1, 1, 0)<cr>
+    let l:count = v:count
+    if l:count > 0
+        let l:count -= 1
+    endif
 
-noremap <script> <buffer> <silent> ][
-        \ :call lookml#NextSection(2, 0, 0)<cr>
+    while l:count >= 0
+        let l:res = search('\v(dimension(|_group)|measure):', l:flags)
+        if l:res == 0
+            break
+        endif
+        let l:count -= 1
+    endwhile
+endfunction
 
-noremap <script> <buffer> <silent> []
-        \ :call lookml#NextSection(2, 1, 0)<cr>
-
-vnoremap <script> <buffer> <silent> ]]
-        \ :<c-u>call lookml#NextSection(1, 0, 1)<cr>
-
-vnoremap <script> <buffer> <silent> [[
-        \ :<c-u>call lookml#NextSection(1, 1, 1)<cr>
-
-vnoremap <script> <buffer> <silent> ][
-        \ :<c-u>call lookml#NextSection(2, 0, 1)<cr>
-
-vnoremap <script> <buffer> <silent> []
-        \ :<c-u>call lookml#NextSection(2, 1, 1)<cr>
+noremap <silent> <buffer> ]] :<c-u>call Next(1)<CR>
+noremap <silent> <buffer> [[ :<c-u>call Next(0)<CR>
