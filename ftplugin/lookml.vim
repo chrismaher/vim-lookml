@@ -17,3 +17,15 @@ function! GetLookMLFold(lnum)
     endif
     return l:indent
 endfunction
+
+noremap <silent> <buffer> ]] :<c-u>call lookml#NextSection(1, 0)<cr>
+noremap <silent> <buffer> [[ :<c-u>call lookml#NextSection(0, 0)<cr>
+
+vnoremap <silent> <buffer> ]] :<c-u>call lookml#NextSection(1, 1)<cr>
+vnoremap <silent> <buffer> [[ :<c-u>call lookml#NextSection(0, 1)<cr>
+
+vnoremap <silent> <buffer> af :<c-u>call lookml#AF()<cr>
+vnoremap <silent> <buffer> if :<c-u>call lookml#IF()<cr>
+
+omap <silent> <buffer> af :normal Vaf<CR>
+omap <silent> <buffer> if :normal Vif<CR>
