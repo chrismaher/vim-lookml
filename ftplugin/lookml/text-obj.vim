@@ -1,27 +1,5 @@
-function! AF()
-    while getline('.') !~# '\v\s*(dimension(|_group)|measure)\s*:.*\{(\s*|#.*)$'
-        if foldlevel('.') == 1
-            return
-        endif
-        normal! [z
-    endwhile
-    normal! V]z
-endfunction
-
-function! IF()
-    while getline('.') !~# '\v\s*(dimension(|_group)|measure)\s*:.*\{(\s*|#.*)$'
-        if foldlevel('.') == 1
-            return
-        endif
-        normal! [z
-    endwhile
-    normal! jV]zk
-endfunction
-
-vnoremap af :<C-U>silent! call AF()<CR>
-vnoremap if :<C-U>silent! call IF()<CR>
-" vnoremap af :<C-U>silent! normal! [zV]z<CR>
-" vnoremap if :<C-U>silent! normal! [zjV]zk<CR>
+vnoremap <silent> af :<c-u>call lookml#AF()<cr>
+vnoremap <silent> if :<c-u>call lookml#IF()<cr>
 
 omap af :normal Vaf<CR>
 omap if :normal Vif<CR>

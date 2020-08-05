@@ -1,3 +1,23 @@
+function! lookml#AF()
+    while getline('.') !~# '\v\s*(dimension(|_group)|measure)\s*:.*\{(\s*|#.*)$'
+        if foldlevel('.') == 1
+            return
+        endif
+        normal! [z
+    endwhile
+    normal! V]z
+endfunction
+
+function! lookml#IF()
+    while getline('.') !~# '\v\s*(dimension(|_group)|measure)\s*:.*\{(\s*|#.*)$'
+        if foldlevel('.') == 1
+            return
+        endif
+        normal! [z
+    endwhile
+    normal! jV]zk
+endfunction
+
 function! lookml#NextSection(forward, visual)
     let l:flags = 'W'
     if ! a:forward
