@@ -1,21 +1,20 @@
-function! lookml#NextSection(type, backwards, visual)
+function! lookml#NextSection(forward, visual)
+    let l:flags = 'W'
+    if ! a:forward
+        let l:flags = l:flags . 'b'
+    endif
+
     if a:visual
         normal! gv
     endif
 
-    if a:type == 1
-        let pattern = '\v\n^(#|\s)*(dimension(|_group)|fields|measure|set|join):'
-        let flags = 'e'
-    elseif a:type == 2
-        let pattern = '\v\n\n^(datagroup|explore|view|%^):'
-        let flags = 'e'
-    endif
+    let l:count = v:count1
 
-    if a:backwards
-        let dir = '?'
-    else
-        let dir = '/'
-    endif
-
-    execute 'silent normal! ' . dir . pattern . dir . flags . "\r"
+    while l:count > 0
+        let l:res = search('\v(dimension(|_group)|measure):', l:flags)
+        if l:res == 0
+            break
+        endif
+        let l:count -= 1
+    endwhile
 endfunction
