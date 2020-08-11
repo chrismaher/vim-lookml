@@ -24,8 +24,14 @@ function! lookml#NextSection(forward, visual)
 
     let l:count = v:count1
 
+    if expand('%:r:e') ==? 'model'
+        let l:pattern = '\vexplore:'
+    else
+        let l:pattern = '\v(dimension(|_group)|measure):'
+    endif
+
     while l:count > 0
-        let l:res = search('\v(dimension(|_group)|measure):', l:flags)
+        let l:res = search(l:pattern, l:flags)
         if l:res == 0
             break
         endif
