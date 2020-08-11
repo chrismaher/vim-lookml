@@ -1,21 +1,15 @@
-function! lookml#AF()
+function! lookml#Select(boundary)
     while getline('.') !~# '\v\s*(dimension(|_group)|measure)\s*:.*\{(\s*|#.*)$'
         if foldlevel('.') == 1
             return
         endif
         normal! [z
     endwhile
-    normal! V]z
-endfunction
-
-function! lookml#IF()
-    while getline('.') !~# '\v\s*(dimension(|_group)|measure)\s*:.*\{(\s*|#.*)$'
-        if foldlevel('.') == 1
-            return
-        endif
-        normal! [z
-    endwhile
-    normal! jV]zk
+    if a:boundary ==# 'a'
+        normal! V]z
+    elseif a:boundary ==# 'i'
+        normal! jV]zk
+    endif
 endfunction
 
 function! lookml#NextSection(forward, visual)
