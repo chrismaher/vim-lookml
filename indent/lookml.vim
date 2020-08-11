@@ -15,19 +15,19 @@ function! GetLookMLIndent(lnum)
         return 0
     endif
 
-    let prevlnum = prevnonblank(a:lnum-1)
-    let thisindent = indent(prevlnum)
+    let l:prevlnum = prevnonblank(a:lnum-1)
+    let l:thisindent = indent(l:prevlnum)
 
-    let prevline = getline(prevlnum)
-    let thisline = getline(a:lnum)
+    let l:prevline = getline(l:prevlnum)
+    let l:thisline = getline(a:lnum)
 
-    if prevline =~# '[\{\[\(]\s*$'
-        let thisindent += &shiftwidth
+    if l:prevline =~# '[\{\[\(]\s*$'
+        let l:thisindent += &shiftwidth
     endif
 
-    if thisline =~# '[\}\]\)]\s*$'
-        let thisindent -= &shiftwidth
+    if l:thisline =~# '[\}\]\)]\s*$'
+        let l:thisindent -= &shiftwidth
     endif
 
-    return thisindent
+    return l:thisindent
 endfunction
