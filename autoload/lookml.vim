@@ -27,7 +27,7 @@ function! lookml#NextSection(forward, visual)
     if expand('%:r:e') ==? 'model'
         let l:pattern = '\vexplore:'
     else
-        let l:pattern = '\v(dimension(|_group)|measure):'
+        let l:pattern = '\v(dimension(|_group)|measure|filter|parameter|set|derived_table):'
     endif
 
     while l:count > 0
