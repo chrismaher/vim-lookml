@@ -1,10 +1,16 @@
 setlocal foldmethod=expr
 setlocal foldexpr=GetLookMLFold(v:lnum)
 
-if !exists('g:lookml_foldlevel')
-    let g:lookml_foldlevel = 1
+if !exists('b:lookml_foldlevel')
+    let b:lookml_foldlevel = {'model': 0, 'view': 1}[expand('%:r:e')]
 endif
-execute 'setlocal foldlevel=' . g:lookml_foldlevel
+execute 'setlocal foldlevel=' . b:lookml_foldlevel
+
+if expand('%:r:e') ==? 'model'
+    let s:pattern = '\v\s*(explore|datagroup)\s*:'
+else
+    let s:pattern = '\v\s*(dimension(|_group)|measure|filter|parameter|set|derived_table)\s*:'
+endif
 
 function! GetLookMLFold(lnum)
     let l:contents = getline(a:lnum)
@@ -18,14 +24,49 @@ function! GetLookMLFold(lnum)
     return l:indent
 endfunction
 
-noremap <silent> <buffer> ]] :<c-u>call lookml#NextSection(1, 0)<cr>
-noremap <silent> <buffer> [[ :<c-u>call lookml#NextSection(0, 0)<cr>
+function! s:Select(boundary)
+    while getline('.') !~# s:pattern " '.*\{(\s*|#.*)$'
+        if foldlevel('.') == 1
+            return
+        endif
+        normal! [z
+    endwhile
+    if a:boundary ==# 'a'
+        normal! V]z
+    elseif a:boundary ==# 'i'
+        normal! jV]zk
+    endif
+endfunction
 
-vnoremap <silent> <buffer> ]] :<c-u>call lookml#NextSection(1, 1)<cr>
-vnoremap <silent> <buffer> [[ :<c-u>call lookml#NextSection(0, 1)<cr>
+function! s:NextSection(forward, visual)
+    let l:flags = 'W'
+    if ! a:forward
+        let l:flags = l:flags . 'b'
+    endif
 
-vnoremap <silent> <buffer> af :<c-u>call lookml#Select('a')<cr>
-vnoremap <silent> <buffer> if :<c-u>call lookml#Select('i')<cr>
+    if a:visual
+        normal! gv
+    endif
+
+    let l:count = v:count1
+
+    while l:count > 0
+        let l:res = search(s:pattern, l:flags)
+        if l:res == 0
+            break
+        endif
+        let l:count -= 1
+    endwhile
+endfunction
+
+noremap <silent> <buffer> ]] :<c-u>call <sid>NextSection(1, 0)<cr>
+noremap <silent> <buffer> [[ :<c-u>call <sid>NextSection(0, 0)<cr>
+
+vnoremap <silent> <buffer> ]] :<c-u>call <sid>NextSection(1, 1)<cr>
+vnoremap <silent> <buffer> [[ :<c-u>call <sid>NextSection(0, 1)<cr>
+
+vnoremap <silent> <buffer> af :<c-u>call <sid>Select('a')<cr>
+vnoremap <silent> <buffer> if :<c-u>call <sid>Select('i')<cr>
 
 omap <silent> <buffer> af :normal Vaf<CR>
 omap <silent> <buffer> if :normal Vif<CR>
