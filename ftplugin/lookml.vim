@@ -1,16 +1,21 @@
 setlocal foldmethod=expr
 setlocal foldexpr=GetLookMLFold(v:lnum)
 
+let s:file_type = expand('%:r:e')
+let s:fold_dict = {'model': 0, 'view': 1}
+
 if !exists('b:lookml_foldlevel')
-    let b:lookml_foldlevel = {'model': 0, 'view': 1}[expand('%:r:e')]
+    let b:lookml_foldlevel = s:fold_dict[s:file_type]
 endif
 execute 'setlocal foldlevel=' . b:lookml_foldlevel
 
-if expand('%:r:e') ==? 'model'
+if s:file_type ==? 'model'
     let s:pattern = '\v\s*(explore|datagroup)\s*:'
 else
     let s:pattern = '\v\s*(dimension(|_group)|measure|filter|parameter|set|derived_table)\s*:'
 endif
+
+let s:fold_level = s:fold_dict[s:file_type]
 
 function! GetLookMLFold(lnum)
     let l:contents = getline(a:lnum)
@@ -26,7 +31,7 @@ endfunction
 
 function! s:Select(boundary)
     while getline('.') !~# s:pattern " '.*\{(\s*|#.*)$'
-        if foldlevel('.') == 1
+        if foldlevel('.') == s:fold_level
             return
         endif
         normal! [z
@@ -34,7 +39,7 @@ function! s:Select(boundary)
     if a:boundary ==# 'a'
         normal! V]z
     elseif a:boundary ==# 'i'
-        normal! jV]zk
+        normal! V]zkoj
     endif
 endfunction
 
